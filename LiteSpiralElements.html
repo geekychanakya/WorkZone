@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="" />
+    <meta charset="UTF-8">
+    <title>Clockwise AntiClockwise Elements</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script>
+        // Change your array content in 'm x n' format 
+        var arr = [
+            [1, 2, 3, 4, 5, 6],
+            [7, 8, 9, 10, 11, 12],
+            [13, 14, 15, 16, 17 ,18],
+            [19, 20, 21, 22, 23, 24],
+            [25, 26, 27, 28, 29, 30]
+        ]
+        // Change your iteration Clockwise or anti-Clockwise (by just interchanging the position of 'east' and 'west')
+        var news = ['west','south','east','north'];
+
+        function getSpiral(arrayElem, result, flag, pos) {
+            switch (flag) {
+                case pos[0]:
+                    // Traversing East or West
+                    if (pos[0] == 'east') {
+                        result = result.concat(arrayElem.shift());
+                    }
+                    else {
+                        result = result.concat(arrayElem.shift().reverse());
+                    }
+                    flag = pos[1];
+                    break;
+                
+                case pos[1]:
+                    // Traversing South                    
+                        arrayElem.forEach(function (elemRight) {
+                            if (pos[0] == 'east') {
+                                result.push(elemRight.pop());
+                            }
+                            else{
+                                result.push(elemRight.shift());
+                            }
+                        });
+                    flag = pos[2];
+                    break;
+
+                case pos[2]:
+                    // Traversing West or East
+                    if (pos[0] == 'east') {
+                        result = result.concat(arrayElem.pop().reverse());
+                    }
+                    else {
+                        result = result.concat(arrayElem.pop());
+                    }
+                    flag = pos[3];
+                    break;
+
+                case pos[3]:
+                    // Traversing North
+                    var tempNorth = [];                    
+                        arrayElem.forEach(function (elemLeft) {
+                            if (pos[0] == 'east') {
+                                tempNorth.push(elemLeft.shift());
+                            }
+                            else{
+                                tempNorth.push(elemLeft.pop());
+                            }
+                        });
+                    result = result.concat(tempNorth.reverse());                                        
+                    flag = pos[0];
+                    break;
+
+                default:
+                    return;
+            }
+
+            // Recursion
+            return arrayElem.length == 0 ? result : getSpiral(arrayElem, result, flag, pos);
+        }
+
+        var result;
+        if (arr.length != 0) {
+            // initialize the function
+            result = getSpiral(arr, [], news[0], news);
+        }
+        else {
+            result = 0;
+        }
+        console.log('The resultant elements are: ', result);
+
+
+        // To print the result data on View
+        function getTheArrayElements() {
+            var aBox = document.getElementById("arrayBox");
+            aBox.innerHTML += "<i class='fa fa-chevron-right'></i> &nbsp;&nbsp;&nbsp;";
+            result.forEach(function (item, index) {
+                aBox.innerHTML += item + "  ";
+            });
+            aBox.innerHTML += "&nbsp;&nbsp; <i class='fa fa-diamond'></i>";
+        }
+    </script>
+
+    <style>
+        /* Internal Stylesheet */
+        @import url('https://fonts.googleapis.com/css?family=Pacifico|Macondo');
+
+        /*----- change the style of arrayBox and button -----*/
+        #arrayBox {
+            font-family: "Macondo";
+            font-weight: 600;
+            font-size: 150%;
+            color: #1976D2;
+            margin: -50px 45px;
+            border: 3px dashed #009587;
+            border-radius: 6px;
+            padding: 50px 15px;
+        }
+        button {
+            font-family: "Pacifico";
+            font-weight: 300;
+            font-size: 105%;
+            margin: 30px 85px;
+            color: white;
+            background-color: #009587;
+            padding: 8px 20px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body class="container">
+    <button onclick="getTheArrayElements()"><i class="fa fa-bolt"></i>&nbsp;&nbsp;Value</button>
+    <div id="arrayBox"></div>
+</body>
+</html>
